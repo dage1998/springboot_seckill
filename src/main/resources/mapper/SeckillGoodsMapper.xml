@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qf.springboot_seckill.dao.SeckillGoodsDao">
+
+	<resultMap id="seckillMap" type="seckillGoods">
+		<id property="sid" column="sid"/>
+		<result property="seckillPrice" column="seckillPrice"/>
+		<result property="seckillStock" column="seckillStock"/>
+		<result property="beginTime" column="beginTime"/>
+		<result property="endTime" column="endTime"/>
+		<association property="goods" >
+			<id property="gid" column="gid"/>
+			<result property="gname" column="gname"/>
+			<result property="price" column="price"/>
+			<result property="stock" column="stock"/>
+			<result property="imgPath" column="imgPath"/>
+		</association>
+	</resultMap>
+
+	<select id="selectAll" resultMap="seckillMap">
+		select sg.sid,sg.seckillPrice,sg.seckillStock,sg.beginTime,sg.endTime,g.* from t_goods g
+		INNER JOIN t_seckillgoods sg
+		on g.gid = sg.gid
+	</select>
+
+	<select id="selectBySid" parameterType="java.lang.Integer" resultMap="seckillMap">
+		   select sg.sid,sg.seckillPrice,sg.seckillStock,sg.beginTime,sg.endTime,g.* from t_goods g
+    INNER JOIN t_seckillgoods sg
+    on g.gid=sg.gid WHERE sg.sid=#{sid}
+	</select>
+
+	<select id="selectSeckillStock" parameterType="java.lang.Integer" resultType="int">
+		select seckillStock from t_seckillgoods where sid = #{sid}
+	</select>
+
+
+	<update id="updateSeckillStock" parameterType="java.lang.Integer">
+		update  t_seckillgoods set seckillStock =seckillStock -1 where sid =#{sid}
+	</update>
+</mapper>
+	
+	
